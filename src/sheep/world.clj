@@ -10,13 +10,8 @@
 (defn wall-positions [map-data]
   (apply concat
     (map-indexed
-      (fn [y row] (filter (fn [i] (not (nil? i)))
-                    (map-indexed
-                      (fn [x chr]
-                        (if (= chr \#)
-                          [x y]
-                          nil))
-                      row)))
+      (fn [y row] (filter #(not (nil? %))
+                    (map-indexed (fn [x chr] (if (= chr \#) [x y] nil)) row)))
       map-data)))
 
 (defn wall-box [x y]
