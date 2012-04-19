@@ -1,6 +1,7 @@
 # sheep
 
-A 3D game with sheeps and labyrinths
+A 3D game with sheeps and labyrinths designed by my daughters :-)
+
 ## Usage
 
 '''
