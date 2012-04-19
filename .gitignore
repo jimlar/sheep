@@ -1,0 +1,9 @@
+/pom.xml
+/classes
+/native
+/.lein-failures
+/checkouts
+/.idea
+/sheep.iml
+/liblwjgl64.so
+/libopenal64.so
