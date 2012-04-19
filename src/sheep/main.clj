@@ -2,7 +2,6 @@
   (:require [jme.core :as jme]))
 
 (defn -main [& args]
-  (jme/warn-logging)
   (jme/view (jme/rotate (jme/node
               [
                 (jme/material (jme/box))

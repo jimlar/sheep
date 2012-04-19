@@ -15,6 +15,11 @@
 (defn warn-logging []
   (.setLevel (Logger/getLogger "com.jme3") Level/WARNING))
 
+(warn-logging)
+
+(defn info-logging []
+  (.setLevel (Logger/getLogger "com.jme3") Level/INFO))
+
 (def asset-manager (JmeSystem/newAssetManager (.getResource (.getContextClassLoader (Thread/currentThread)) "com/jme3/asset/Desktop.cfg")))
 
 (defn material
@@ -67,3 +72,4 @@
 
 (defn view [obj]
   (.start (world (node [obj]) (fn [world] "") (fn [world tpf] ""))))
+
