@@ -57,19 +57,20 @@
       (dorun (map #(.attachChild n %) children))
       n)))
 
-(defn world [root-node setup-fn update-fn]
+(defn attach [node obj]
+  (.attachChild node obj))
+
+(defn world [setup-fn update-fn]
   (doto
     (proxy [SimpleApplication] []
       (simpleInitApp []
         (eat-exceptions
-          (.attachChild (.getRootNode this) root-node)
-          (if setup-fn
-            (setup-fn this))))
+          (attach (.getRootNode this) (setup-fn this))))
       (simpleUpdate [tpf]
         (eat-exceptions
           (update-fn this tpf))))
     (.setShowSettings false)))
 
 (defn view [obj]
-  (.start (world (node [obj]) (fn [world] "") (fn [world tpf] ""))))
+  (.start (world (fn [world root-node] obj) (fn [world tpf] ""))))
 

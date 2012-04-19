@@ -1,9 +1,9 @@
 (ns sheep.main
-  (:require [jme.core :as jme]))
+  (:require [jme.core :as jme]
+            [sheep.world :as world]))
 
 (defn -main [& args]
-  (jme/view (jme/rotate (jme/node
-              [
-                (jme/material (jme/box))
-                (jme/position (jme/material (jme/box 1 1 1)) 1 1 1)
-              ]) 0.3 0.4 0.5 0.6)))
+  (.start
+    (jme/world
+      world/setup
+      world/update)))
