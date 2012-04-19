@@ -72,5 +72,5 @@
     (.setShowSettings false)))
 
 (defn view [obj]
-  (.start (world (fn [world root-node] obj) (fn [world tpf] ""))))
+  (.start (world (fn [world] obj) (fn [world tpf] ""))))
 
