@@ -6,7 +6,7 @@
   (:import com.jme3.asset.TextureKey)
   (:import com.jme3.app.SimpleApplication)
   (:import [com.jme3.system AppSettings JmeSystem])
-  (:import (java.util.logging Level Logger)))
+  (:import [java.util.logging Level Logger]))
 
 (defmacro eat-exceptions
   [& forms]
