@@ -1,4 +1,4 @@
-(ns sheep.core
+(ns sheep.main
   (:require [jme.core :as jme]))
 
 (defn -main [& args]

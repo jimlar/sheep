@@ -27,4 +27,4 @@
                  [com.jme3/jME3-testdata "3.0.0-SNAPSHOT"]
                  [com.jme3/jME3-lwjgl "3.0.0-SNAPSHOT"]
                  [com.jme3/jME3-lwjgl-natives "3.0.0-SNAPSHOT"]]
-  :main sheep.core)
+  :main sheep.main)
