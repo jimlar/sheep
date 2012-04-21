@@ -1,7 +1,7 @@
 (ns jme.core
   (:import [com.jme3.math Vector3f Quaternion])
   (:import [com.jme3.scene Geometry Node])
-  (:import com.jme3.scene.shape.Box)
+  (:import [com.jme3.scene.shape Box Sphere])
   (:import com.jme3.material.Material)
   (:import com.jme3.asset.TextureKey)
   (:import com.jme3.app.SimpleApplication)
@@ -55,6 +55,11 @@
   ([name l w h] (geometry name (Box. l w h)))
   ([l w h] (box "box" l w h))
   ([] (box 1 1 1)))
+
+(defn sphere
+  ([name radius] (geometry name (Sphere. 32 32 (float radius))))
+  ([radius] (sphere "sphere" radius))
+  ([] (sphere 0.5)))
 
 (defn node
   ([children]
