@@ -5,6 +5,7 @@
   (:import com.jme3.material.Material)
   (:import com.jme3.asset.TextureKey)
   (:import com.jme3.app.SimpleApplication)
+  (:import com.jme3.light.DirectionalLight)
   (:import [com.jme3.system AppSettings JmeSystem])
   (:import [java.util.logging Level Logger]))
 
@@ -22,6 +23,12 @@
 
 (def asset-manager (JmeSystem/newAssetManager (.getResource (.getContextClassLoader (Thread/currentThread)) "com/jme3/asset/Desktop.cfg")))
 
+(defn load-model [path]
+  (.loadModel asset-manager path))
+
+(defn directional-light [node x y z]
+  (doto node (.addLight (doto (DirectionalLight.) (.setDirection (Vector3f. x y z))))))
+
 (defn material
   ([obj material-path texture-path]
     (let [mat (Material. asset-manager material-path)]
@@ -33,8 +40,12 @@
   ([obj x y] (position obj x y 0))
   ([obj x y z] (doto obj (.setLocalTranslation (Vector3f. x y z)))))
 
-(defn rotate [obj x y z w]
-  (doto obj (.rotate (Quaternion. x y z w))))
+(defn rotate
+  ([obj x y z w] (doto obj (.rotate (Quaternion. x y z w))))
+  ([obj x y z] (doto obj (.rotate x y z))))
+
+(defn scale [obj x y z]
+  (doto obj (.scale x y z)))
 
 (defn geometry
   ([mesh] (geometry "geometry" mesh))

@@ -20,7 +20,10 @@
 (defn labyrinth []
   (jme/node "Labyrinth" (map #(wall-box (first %) (second %)) (wall-positions map-data))))
 
+(defn player []
+  (jme/scale (jme/load-model "Models/Ninja/Ninja.mesh.xml") 0.05 0.05 0.05))
+
 (defn setup [world]
-  (jme/node [(labyrinth)]))
+  (jme/node [(labyrinth) (player)]))
 
 (defn update [world tpf])
