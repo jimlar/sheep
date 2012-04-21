@@ -26,19 +26,15 @@
   ([obj material-path texture-path]
     (let [mat (Material. asset-manager material-path)]
       (.setTexture mat "ColorMap" (.loadTexture asset-manager (TextureKey. texture-path)))
-      (.setMaterial obj mat))
-    obj)
+      (doto obj (.setMaterial mat))))
   ([obj] (material obj "Common/MatDefs/Misc/Unshaded.j3md" "Textures/Terrain/BrickWall/BrickWall.jpg")))
 
 (defn position
   ([obj x y] (position obj x y 0))
-  ([obj x y z]
-    (.setLocalTranslation obj (Vector3f. x y z))
-    obj))
+  ([obj x y z] (doto obj (.setLocalTranslation (Vector3f. x y z)))))
 
 (defn rotate [obj x y z w]
-  (.rotate obj (Quaternion. x y z w))
-  obj)
+  (doto obj (.rotate (Quaternion. x y z w))))
 
 (defn geometry
   ([mesh] (geometry "geometry" mesh))
@@ -60,6 +56,11 @@
 (defn attach [node obj]
   (.attachChild node obj))
 
+(defn default-settings []
+  (doto (AppSettings. true)
+    (.setHeight 800)
+    (.setWidth 1280)))
+
 (defn world [setup-fn update-fn]
   (doto
     (proxy [SimpleApplication] []
@@ -69,7 +70,8 @@
       (simpleUpdate [tpf]
         (eat-exceptions
           (update-fn this tpf))))
-    (.setShowSettings false)))
+    (.setShowSettings false)
+    (.setSettings (default-settings))))
 
 (defn view [obj]
   (.start (world (fn [world] obj) (fn [world tpf] ""))))
