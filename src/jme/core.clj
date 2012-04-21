@@ -6,6 +6,8 @@
   (:import com.jme3.asset.TextureKey)
   (:import com.jme3.app.SimpleApplication)
   (:import com.jme3.light.DirectionalLight)
+  (:import com.jme3.input.KeyInput)
+  (:import com.jme3.input.controls.KeyTrigger)
   (:import [com.jme3.system AppSettings JmeSystem])
   (:import [java.util.logging Level Logger]))
 
@@ -77,18 +79,39 @@
     (.setHeight 800)
     (.setWidth 1280)))
 
-(defn world [setup-fn update-fn]
-  (doto
-    (proxy [SimpleApplication] []
-      (simpleInitApp []
-        (eat-exceptions
-          (attach (.getRootNode this) (setup-fn this))))
-      (simpleUpdate [tpf]
-        (eat-exceptions
-          (update-fn this tpf))))
-    (.setShowSettings false)
-    (.setSettings (default-settings))))
+(defn static-integer? [#^java.lang.reflect.Field field]
+  (and (java.lang.reflect.Modifier/isStatic (.getModifiers field))
+    (integer? (.get field nil))))
+
+(defn integer-constants [class]
+  (let [integer-fields ((filter static-integer? (.getFields class)) class)]
+    (into (sorted-map)
+      (zipmap (map #(.get % nil) integer-fields)
+        (map #(.getName %) integer-fields)))))
+
+(defn all-keys []
+  (let [inputs (integer-constants KeyInput)]
+    (assoc
+      (zipmap (map (fn [field] (.toLowerCase (.replaceAll field "_" "-"))) (vals inputs))
+              (map (fn [val] (KeyTrigger. val)) (keys inputs))))))
+(alter-var-root #'all-keys memoize)
+
+(defn world [key-map setup-fn update-fn]
+  (let [app (proxy [SimpleApplication] []
+              (simpleInitApp []
+                (eat-exceptions
+                  (attach (.getRootNode this) (setup-fn this))))
+              (simpleUpdate [tpf]
+                (eat-exceptions
+                  (update-fn this tpf))))
+        input-manager (.getInputManager app)]
+    (for [k (keys input-manager)]
+      (doto input-manager
+        (.addMapping (str k) (k (all-keys)))))
+    (doto app
+      (.setShowSettings false)
+      (.setSettings (default-settings)))))
 
 (defn view [obj]
-  (.start (world (fn [world] obj) (fn [world tpf] ""))))
+  (.start (world {} (fn [world] obj) (fn [world tpf] ""))))
 
