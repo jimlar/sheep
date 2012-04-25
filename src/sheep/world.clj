@@ -30,7 +30,7 @@
 (defn create-player
   ([pos] (create-player (first pos) (second pos)))
   ([x y]
-    (jme/position (jme/material (jme/sphere 0.5) "Textures/Terrain/Rocky/RockyTexture.jpg") x y 0)))
+    (jme/position (jme/node [(jme/material (jme/sphere 0.3) "Textures/Terrain/Rocky/RockyTexture.jpg")]) x y 0)))
 
 (defonce player (atom nil))
 (def player-speed 3)
@@ -43,12 +43,23 @@
   (let [pos (jme/position @player)]
     (jme/position @player (+ (:x pos) (* value player-speed)) (:y pos) (:z pos))))
 
+(defn move-up [world value]
+  (let [pos (jme/position @player)]
+    (jme/position @player (:x pos) (+ (:y pos) (* value player-speed )) (:z pos))))
+
+(defn move-down [world value]
+  (let [pos (jme/position @player)]
+    (jme/position @player (:x pos) (- (:y pos) (* value player-speed )) (:z pos))))
+
 (defn keymap []
-  {:key-g move-left
-   :key-j move-right})
+  {:key-left move-left
+   :key-right move-right
+   :key-up move-up
+   :key-down move-down})
 
 (defn setup [world]
   (swap! player (fn [ignore pos] (create-player pos)) (player-position map-data))
+  (jme/position (jme/rotate (jme/camera-node world @player) 0 1.2 0) -2 0 5)
   (jme/node [(labyrinth) @player]))
 
 (defn update [world tpf])

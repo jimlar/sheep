@@ -1,7 +1,8 @@
 (ns jme.core
   (:import [com.jme3.math Vector3f Quaternion])
-  (:import [com.jme3.scene Geometry Node])
+  (:import [com.jme3.scene Geometry Node CameraNode])
   (:import [com.jme3.scene.shape Box Sphere])
+  (:import com.jme3.scene.control.CameraControl)
   (:import com.jme3.material.Material)
   (:import com.jme3.asset.TextureKey)
   (:import com.jme3.app.SimpleApplication)
@@ -78,7 +79,8 @@
       n)))
 
 (defn attach [node obj]
-  (.attachChild node obj))
+  (.attachChild node obj)
+  obj)
 
 (defn default-settings []
   (doto (AppSettings. true)
@@ -134,3 +136,11 @@
 
 (defn view [obj]
   (.start (world {} (fn [world] obj) (fn [world tpf] ""))))
+
+(defn camera-node [world obj]
+  (.setEnabled (.getFlyByCamera world) false)
+  (attach
+    obj
+      (doto (CameraNode. "Camera" (.getCamera world))
+        (.setControlDir CameraControl$ControlDirection/SpatialToCamera)
+        (.lookAt (.getLocalTranslation obj) Vector3f/UNIT_Y))))
