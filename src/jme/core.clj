@@ -44,6 +44,7 @@
   ([obj] (material obj "Textures/Terrain/BrickWall/BrickWall.jpg")))
 
 (defn position
+  ([obj] (let [v (.getLocalTranslation obj)] {:x (.x v) :y (.y v) :z (.z v)}))
   ([obj x y] (position obj x y 0))
   ([obj x y z] (doto obj (.setLocalTranslation (Vector3f. x y z)))))
 

@@ -32,17 +32,20 @@
   ([x y]
     (jme/position (jme/material (jme/sphere 0.5) "Textures/Terrain/Rocky/RockyTexture.jpg") x y 0)))
 
-(def player (atom nil))
+(defonce player (atom nil))
+(def player-speed 3)
 
 (defn move-left [world value]
-  (prn "moving left: " value))
+  (let [pos (jme/position @player)]
+    (jme/position @player (- (:x pos) (* value player-speed )) (:y pos) (:z pos))))
 
 (defn move-right [world value]
-  (prn "moving right: " value))
+  (let [pos (jme/position @player)]
+    (jme/position @player (+ (:x pos) (* value player-speed)) (:y pos) (:z pos))))
 
 (defn keymap []
-  {:key-left move-left
-   :key-right move-right})
+  {:key-g move-left
+   :key-j move-right})
 
 (defn setup [world]
   (swap! player (fn [ignore pos] (create-player pos)) (player-position map-data))
