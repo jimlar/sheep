@@ -1,7 +1,7 @@
 (ns jme.core
   (:import [com.jme3.math Vector3f Quaternion])
   (:import [com.jme3.scene Geometry Node CameraNode])
-  (:import [com.jme3.scene.shape Box Sphere])
+  (:import [com.jme3.scene.shape Box Sphere Quad])
   (:import com.jme3.scene.control.CameraControl)
   (:import com.jme3.material.Material)
   (:import com.jme3.asset.TextureKey)
@@ -60,6 +60,9 @@
   ([mesh] (geometry "geometry" mesh))
   ([name mesh] (Geometry. name mesh)))
 
+(defn quad [w h]
+  (Quad. w h))
+
 (defn box
   ([name l w h] (geometry name (Box. l w h)))
   ([l w h] (box "box" l w h))
@@ -110,7 +113,7 @@
                     (onAnalog [binding value tpf]
                       (eat-exceptions
                         (if-let [react ((keyword (subs binding 1)) key-map)]
-                          (react this value)))))]
+                          (react world value)))))]
     (eat-exceptions
       (vec
         (for [k (keys key-map)]
@@ -137,10 +140,17 @@
 (defn view [obj]
   (.start (world {} (fn [world] obj) (fn [world tpf] ""))))
 
-(defn camera-node [world obj]
+(defn disable-flyby-cam [world]
   (.setEnabled (.getFlyByCamera world) false)
+  world)
+
+(defn enable-flyby-cam [world]
+  (.setEnabled (.getFlyByCamera world) true)
+  world)
+
+(defn camera-node [world obj]
   (attach
     obj
       (doto (CameraNode. "Camera" (.getCamera world))
-        (.setControlDir CameraControl$ControlDirection/SpatialToCamera)
+        (.setControlDir com.jme3.scene.control.CameraControl$ControlDirection/SpatialToCamera)
         (.lookAt (.getLocalTranslation obj) Vector3f/UNIT_Y))))

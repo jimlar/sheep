@@ -32,6 +32,9 @@
   ([x y]
     (jme/position (jme/node [(jme/material (jme/sphere 0.3) "Textures/Terrain/Rocky/RockyTexture.jpg")]) x y 0)))
 
+(defn ground []
+  (jme/material (jme/position (jme/geometry "Ground" (jme/quad 50 50)) -25 -1 25)))
+
 (defonce player (atom nil))
 (def player-speed 3)
 
@@ -52,15 +55,18 @@
     (jme/position @player (:x pos) (- (:y pos) (* value player-speed )) (:z pos))))
 
 (defn keymap []
-  {:key-left move-left
-   :key-right move-right
-   :key-up move-up
-   :key-down move-down})
+  {
+    :key-left move-left
+    :key-right move-right
+    :key-up move-up
+    :key-down move-down
+  })
 
 (defn setup [world]
+  (jme/disable-flyby-cam world)
   (swap! player (fn [ignore pos] (create-player pos)) (player-position map-data))
-  (jme/position (jme/rotate (jme/camera-node world @player) 0 1.2 0) -2 0 5)
-  (jme/node [(labyrinth) @player]))
+  (jme/position (jme/rotate (jme/camera-node world @player) 0 1.2 0) 0 0 5)
+  (jme/node [(labyrinth) @player (ground)]))
 
 (defn update [world tpf])
 
