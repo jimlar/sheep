@@ -7,7 +7,7 @@
   (:import com.jme3.asset.TextureKey)
   (:import com.jme3.app.SimpleApplication)
   (:import com.jme3.light.DirectionalLight)
-  (:import com.jme3.input.KeyInput)
+  (:import [com.jme3.input KeyInput ChaseCamera])
   (:import com.jme3.asset.plugins.FileLocator)
   (:import [com.jme3.input.controls Trigger KeyTrigger ActionListener AnalogListener])
   (:import [com.jme3.system AppSettings JmeSystem])
@@ -148,9 +148,13 @@
   (.setEnabled (.getFlyByCamera world) true)
   world)
 
-(defn camera-node [world obj]
+(defn camera-node [world player]
   (attach
-    obj
+    player
       (doto (CameraNode. "Camera" (.getCamera world))
         (.setControlDir com.jme3.scene.control.CameraControl$ControlDirection/SpatialToCamera)
-        (.lookAt (.getLocalTranslation obj) Vector3f/UNIT_Y))))
+        (.lookAt (.getLocalTranslation player) Vector3f/UNIT_Y))))
+
+(defn chase-camera [world player]
+  (doto (ChaseCamera. (.getCamera world) player (.getInputManager world))
+    (.setSmoothMotion false)))

@@ -62,10 +62,13 @@
     :key-down move-down
   })
 
+(defn setup-camera [world]
+  (jme/position (jme/rotate (jme/camera-node world @player) 0 1.2 0) 0 0 5))
+
 (defn setup [world]
   (jme/disable-flyby-cam world)
   (swap! player (fn [ignore pos] (create-player pos)) (player-position map-data))
-  (jme/position (jme/rotate (jme/camera-node world @player) 0 1.2 0) 0 0 5)
+  (jme/chase-camera world @player)
   (jme/node [(labyrinth) @player (ground)]))
 
 (defn update [world tpf])
