@@ -25,15 +25,15 @@
   (jme/position (jme/material (jme/box 0.5 0.5 1)) x y 0))
 
 (defn labyrinth []
-  (jme/node "Labyrinth" (map #(wall-box (first %) (second %)) (wall-positions map-data))))
+  (jme/node "Labyrinth"
+    (conj
+      (map #(wall-box (first %) (second %)) (wall-positions map-data))
+      (jme/material (jme/position (jme/geometry "Ground" (jme/quad 50 50)) -25 -25 -1) "Textures/Terrain/Rocky/RockyTexture.jpg"))))
 
-(defn create-player
+  (defn create-player
   ([pos] (create-player (first pos) (second pos)))
   ([x y]
     (jme/position (jme/node [(jme/material (jme/sphere 0.3) "Textures/Terrain/Rocky/RockyTexture.jpg")]) x y 0)))
-
-(defn ground []
-  (jme/material (jme/position (jme/geometry "Ground" (jme/quad 50 50)) -25 -25 -1) "Textures/Terrain/Rocky/RockyTexture.jpg"))
 
 (defonce player (atom nil))
 (def player-speed 3)
@@ -69,7 +69,7 @@
 (defn setup [world]
   (swap! player (fn [ignore pos] (create-player pos)) (player-position map-data))
   (setup-camera world)
-  (jme/node [(labyrinth) @player (ground)]))
+  (jme/node [(labyrinth) @player]))
 
 (defn update [world tpf])
 
