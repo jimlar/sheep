@@ -1,11 +1,11 @@
 (ns sheep.world
   (:require [jme.core :as jme]))
 
-(def map-data ["#############"
-               "# #       1  "
-               "# # # #######"
-               "#   # #      "
-               "#######      "])
+(def map-data ["###############"
+               "# #       p   #"
+               "# # # ####### #"
+               "#   # #     # #"
+               "#######     ###"])
 
 (defn positions-of [map-data chr]
   (apply concat
@@ -18,7 +18,7 @@
   (positions-of map-data \#))
 
 (defn player-position [map-data]
-  (first (positions-of map-data \1)))
+  (first (positions-of map-data \p)))
 
 (defn wall-box [x y]
 ;;  (jme/position (jme/material (jme/box 0.5 0.5 1) "textures/grass/grass.png") x y 0))
