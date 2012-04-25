@@ -64,7 +64,7 @@
 
 (defn setup-camera [world]
   (jme/disable-flyby-cam world)
-  (jme/position (jme/rotate (jme/camera-node world @player) 0 1.2 0) 0 0 5))
+  (jme/position (jme/rotate (jme/camera-node world @player) 0 1.2 0) 0 0 2.5))
 
 (defn setup [world]
   (swap! player (fn [ignore pos] (create-player pos)) (player-position map-data))

@@ -87,8 +87,8 @@
 
 (defn default-settings []
   (doto (AppSettings. true)
-    (.setHeight 800)
-    (.setWidth 1280)))
+    (.setHeight 600)
+    (.setWidth 800)))
 
 (defn static-integer? [#^java.lang.reflect.Field field]
   (and (java.lang.reflect.Modifier/isStatic (.getModifiers field))
