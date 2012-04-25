@@ -33,7 +33,7 @@
     (jme/position (jme/node [(jme/material (jme/sphere 0.3) "Textures/Terrain/Rocky/RockyTexture.jpg")]) x y 0)))
 
 (defn ground []
-  (jme/material (jme/position (jme/geometry "Ground" (jme/quad 50 50)) -25 -25 -1) "textures/grass/grass.png"))
+  (jme/material (jme/position (jme/geometry "Ground" (jme/quad 50 50)) -25 -25 -1) "Textures/Terrain/Rocky/RockyTexture.jpg"))
 
 (defonce player (atom nil))
 (def player-speed 3)
