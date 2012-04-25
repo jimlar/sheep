@@ -10,9 +10,9 @@ lein run
 
 ## TODO
 
-* Göra en labyrint av kuber eller terräng
 * Göra ett titthål/ficklampa
 * Får?
+* Chase cam eller inte?
 
 ## License
 
