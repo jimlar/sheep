@@ -35,10 +35,10 @@
 (def player (atom nil))
 
 (defn move-left [world value]
-  (prn "moving left"))
+  (prn "moving left: " value))
 
 (defn move-right [world value]
-  (prn "moving right"))
+  (prn "moving right: " value))
 
 (defn keymap []
   {:key-left move-left

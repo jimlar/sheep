@@ -8,7 +8,7 @@
   (:import com.jme3.light.DirectionalLight)
   (:import com.jme3.input.KeyInput)
   (:import com.jme3.asset.plugins.FileLocator)
-  (:import [com.jme3.input.controls Trigger KeyTrigger ActionListener])
+  (:import [com.jme3.input.controls Trigger KeyTrigger ActionListener AnalogListener])
   (:import [com.jme3.system AppSettings JmeSystem])
   (:import [java.util.logging Level Logger]))
 
@@ -103,8 +103,8 @@
 
 (defn init-keymappings [world key-map]
   (let [input-manager (.getInputManager world)
-        listener (proxy [ActionListener] []
-                    (onAction [binding value tpf]
+        listener (proxy [AnalogListener] []
+                    (onAnalog [binding value tpf]
                       (eat-exceptions
                         (if-let [react ((keyword (subs binding 1)) key-map)]
                           (react this value)))))]
