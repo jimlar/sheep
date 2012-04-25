@@ -33,7 +33,7 @@
     (jme/position (jme/node [(jme/material (jme/sphere 0.3) "Textures/Terrain/Rocky/RockyTexture.jpg")]) x y 0)))
 
 (defn ground []
-  (jme/material (jme/position (jme/geometry "Ground" (jme/quad 50 50)) -25 -1 25)))
+  (jme/material (jme/position (jme/geometry "Ground" (jme/quad 50 50)) -25 -25 -1) "textures/grass/grass.png"))
 
 (defonce player (atom nil))
 (def player-speed 3)
@@ -63,10 +63,10 @@
   })
 
 (defn setup-camera [world]
+  (jme/disable-flyby-cam world)
   (jme/position (jme/rotate (jme/camera-node world @player) 0 1.2 0) 0 0 5))
 
 (defn setup [world]
-  (jme/disable-flyby-cam world)
   (swap! player (fn [ignore pos] (create-player pos)) (player-position map-data))
   (setup-camera world)
   (jme/node [(labyrinth) @player (ground)]))
