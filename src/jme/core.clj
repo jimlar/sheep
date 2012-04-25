@@ -7,7 +7,8 @@
   (:import com.jme3.app.SimpleApplication)
   (:import com.jme3.light.DirectionalLight)
   (:import com.jme3.input.KeyInput)
-  (:import com.jme3.input.controls.KeyTrigger)
+  (:import com.jme3.asset.plugins.FileLocator)
+  (:import [com.jme3.input.controls Trigger KeyTrigger ActionListener])
   (:import [com.jme3.system AppSettings JmeSystem])
   (:import [java.util.logging Level Logger]))
 
@@ -18,12 +19,15 @@
 (defn warn-logging []
   (.setLevel (Logger/getLogger "com.jme3") Level/WARNING))
 
-(warn-logging)
-
 (defn info-logging []
   (.setLevel (Logger/getLogger "com.jme3") Level/INFO))
 
-(def asset-manager (JmeSystem/newAssetManager (.getResource (.getContextClassLoader (Thread/currentThread)) "com/jme3/asset/Desktop.cfg")))
+(warn-logging)
+
+(def asset-manager
+  (doto
+    (JmeSystem/newAssetManager (.getResource (.getContextClassLoader (Thread/currentThread)) "com/jme3/asset/Desktop.cfg"))
+    (.registerLocator "assets" FileLocator)))
 
 (defn load-model [path]
   (.loadModel asset-manager path))
@@ -36,7 +40,8 @@
     (let [mat (Material. asset-manager material-path)]
       (.setTexture mat "ColorMap" (.loadTexture asset-manager (TextureKey. texture-path)))
       (doto obj (.setMaterial mat))))
-  ([obj] (material obj "Common/MatDefs/Misc/Unshaded.j3md" "Textures/Terrain/BrickWall/BrickWall.jpg")))
+  ([obj texture-path] (material obj "Common/MatDefs/Misc/Unshaded.j3md" texture-path))
+  ([obj] (material obj "Textures/Terrain/BrickWall/BrickWall.jpg")))
 
 (defn position
   ([obj x y] (position obj x y 0))
@@ -84,34 +89,47 @@
     (integer? (.get field nil))))
 
 (defn integer-constants [class]
-  (let [integer-fields ((filter static-integer? (.getFields class)) class)]
+  (let [integer-fields (filter static-integer? (.getFields class))]
     (into (sorted-map)
       (zipmap (map #(.get % nil) integer-fields)
         (map #(.getName %) integer-fields)))))
 
 (defn all-keys []
   (let [inputs (integer-constants KeyInput)]
-    (assoc
-      (zipmap (map (fn [field] (.toLowerCase (.replaceAll field "_" "-"))) (vals inputs))
-              (map (fn [val] (KeyTrigger. val)) (keys inputs))))))
+    (zipmap (map (fn [field] (keyword (.toLowerCase (.replaceAll field "_" "-")))) (vals inputs))
+            (map (fn [val] (KeyTrigger. val)) (keys inputs)))))
+
 (alter-var-root #'all-keys memoize)
 
+(defn init-keymappings [world key-map]
+  (let [input-manager (.getInputManager world)
+        listener (proxy [ActionListener] []
+                    (onAction [binding value tpf]
+                      (eat-exceptions
+                        (if-let [react ((keyword (subs binding 1)) key-map)]
+                          (react this value)))))]
+    (eat-exceptions
+      (vec
+        (for [k (keys key-map)]
+          (doto input-manager
+            (.addMapping (str k) (into-array Trigger [(k (all-keys))]))
+            (.addListener listener (into-array String [(str k)]))))))))
+
 (defn world [key-map setup-fn update-fn]
-  (let [app (proxy [SimpleApplication] []
+  (let [app (proxy [SimpleApplication ActionListener] []
               (simpleInitApp []
                 (eat-exceptions
-                  (attach (.getRootNode this) (setup-fn this))))
+;;                  (org.lwjgl.input.Mouse/setGrabbed false)
+                  (attach (.getRootNode this) (setup-fn this))
+                  (init-keymappings this key-map)
+                  (.setMoveSpeed (.getFlyByCamera this) (float 7))
+                  (.setRotationSpeed (.getFlyByCamera this) (float 2))))
               (simpleUpdate [tpf]
-                (eat-exceptions
-                  (update-fn this tpf))))
-        input-manager (.getInputManager app)]
-    (for [k (keys input-manager)]
-      (doto input-manager
-        (.addMapping (str k) (k (all-keys)))))
+                          (eat-exceptions
+                            (update-fn this tpf))))]
     (doto app
       (.setShowSettings false)
       (.setSettings (default-settings)))))
 
 (defn view [obj]
   (.start (world {} (fn [world] obj) (fn [world tpf] ""))))
-

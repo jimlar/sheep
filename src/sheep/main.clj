@@ -3,8 +3,4 @@
             [sheep.world :as world]))
 
 (defn -main [& args]
-  (.start
-    (jme/world
-      (world/keymap)
-      world/setup
-      world/update)))
+  (world/setup-and-start-world))

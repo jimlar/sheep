@@ -21,6 +21,7 @@
   (first (positions-of map-data \1)))
 
 (defn wall-box [x y]
+;;  (jme/position (jme/material (jme/box 0.5 0.5 1) "textures/grass/grass.png") x y 0))
   (jme/position (jme/material (jme/box 0.5 0.5 1)) x y 0))
 
 (defn labyrinth []
@@ -29,13 +30,15 @@
 (defn create-player
   ([pos] (create-player (first pos) (second pos)))
   ([x y]
-    (jme/position (jme/material (jme/sphere 0.5) "Common/MatDefs/Misc/Unshaded.j3md" "Textures/Terrain/Rocky/RockyTexture.jpg") x y 0)))
+    (jme/position (jme/material (jme/sphere 0.5) "Textures/Terrain/Rocky/RockyTexture.jpg") x y 0)))
 
 (def player (atom nil))
 
-(defn move-left [])
+(defn move-left [world value]
+  (prn "moving left"))
 
-(defn move-right [])
+(defn move-right [world value]
+  (prn "moving right"))
 
 (defn keymap []
   {:key-left move-left
@@ -46,3 +49,9 @@
   (jme/node [(labyrinth) @player]))
 
 (defn update [world tpf])
+
+
+(defn setup-and-start-world []
+  (doto
+    (jme/world (keymap) setup update)
+    (.start)))
