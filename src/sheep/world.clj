@@ -68,7 +68,7 @@
 (defn setup [world]
   (jme/disable-flyby-cam world)
   (swap! player (fn [ignore pos] (create-player pos)) (player-position map-data))
-  (jme/chase-camera world @player)
+  (setup-camera world)
   (jme/node [(labyrinth) @player (ground)]))
 
 (defn update [world tpf])
