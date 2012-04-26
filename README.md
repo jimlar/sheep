@@ -1,6 +1,9 @@
 # sheep
 
-A 3D game with sheeps and labyrinths designed by my daughters :-)
+A 3D game with sheeps, labyrinths and grass monsters designed by my creative kids :-)
+
+The main purpose of this is to give inspiration to my kids on learning how computers work, 
+and for me to learn about how game engines work.
 
 ## Usage
 
@@ -10,9 +13,9 @@ lein run
 
 ## TODO
 
-* Göra ett titthål/ficklampa
-* Får?
-* Chase cam eller inte?
+* Add a lightsource relative to the player (flashlight style)
+* Sheep?
+* Chase cam or not?
 
 ## License
 
