@@ -13,6 +13,7 @@ lein run
 
 ## TODO
 
+* Need to split out namespaces, refactor
 * Add a lightsource relative to the player (flashlight style)
 * Sheep?
 * Chase cam or not?
