@@ -11,6 +11,7 @@
   (:import com.jme3.asset.plugins.FileLocator)
   (:import [com.jme3.input.controls Trigger KeyTrigger ActionListener AnalogListener])
   (:import [com.jme3.system AppSettings JmeSystem])
+  (:import com.jme3.bullet.BulletAppState)
   (:import [java.util.logging Level Logger]))
 
 (defmacro eat-exceptions
@@ -122,11 +123,12 @@
             (.addListener listener (into-array String [(str k)]))))))))
 
 (defn world [key-map setup-fn update-fn]
-  (let [app (proxy [SimpleApplication ActionListener] []
+  (let [bullet (BulletAppState.)
+        app (proxy [SimpleApplication ActionListener] []
               (simpleInitApp []
                 (eat-exceptions
-;;                  (org.lwjgl.input.Mouse/setGrabbed false)
-                  (attach (.getRootNode this) (setup-fn this))
+                  (.attach (.getStateManager this) bullet)
+                  (attach (.getRootNode this) (setup-fn this (.getPhysicsSpace bullet)))
                   (init-keymappings this key-map)
                   (.setMoveSpeed (.getFlyByCamera this) (float 7))
                   (.setRotationSpeed (.getFlyByCamera this) (float 2))))
@@ -138,7 +140,7 @@
       (.setSettings (default-settings)))))
 
 (defn view [obj]
-  (.start (world {} (fn [world] obj) (fn [world tpf] ""))))
+  (.start (world {} (fn [world physics-space] obj) (fn [world tpf] ""))))
 
 (defn disable-flyby-cam [world]
   (.setEnabled (.getFlyByCamera world) false)
@@ -148,13 +150,16 @@
   (.setEnabled (.getFlyByCamera world) true)
   world)
 
-(defn camera-node [world player]
+(defn camera-node [world player-node player-control]
   (attach
-    player
+    player-node
       (doto (CameraNode. "Camera" (.getCamera world))
         (.setControlDir com.jme3.scene.control.CameraControl$ControlDirection/SpatialToCamera)
-        (.lookAt (.getLocalTranslation player) Vector3f/UNIT_Y))))
+        (.lookAt (.getPhysicsLocation player-control) Vector3f/UNIT_Y))))
 
 (defn chase-camera [world player]
   (doto (ChaseCamera. (.getCamera world) player (.getInputManager world))
     (.setSmoothMotion false)))
+
+(defn add-control [spatial control]
+  (.addControl spatial control))
