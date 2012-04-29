@@ -1,5 +1,6 @@
 /pom.xml
-/target
+/classes/
+/target/
 /native
 /.lein-failures
 /checkouts

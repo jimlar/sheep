@@ -91,6 +91,7 @@
     (swap! player (fn [ignore pos] (create-player pos)) (player-start-pos map-data))
     (setup-camera world)
     (jme/add-control labyrinth landscape)
+;    (.add physics-space (player-control))
     (.add physics-space landscape)
     (jme/node [labyrinth (player-node)])))
 
