@@ -67,11 +67,11 @@
 
 (defn move-up [world value]
   (let [pos (player-pos)]
-    (phys/location (player-control ) (:x pos) (+ (:y pos) (* value player-speed )) (:z pos))))
+    (phys/location (player-control ) (:x pos) (:y pos) (+ (:z pos) (* value player-speed )))))
 
 (defn move-down [world value]
   (let [pos (player-pos)]
-    (phys/location (player-control ) (:x pos) (- (:y pos) (* value player-speed )) (:z pos))))
+    (phys/location (player-control ) (:x pos) (:y pos) (- (:z pos) (* value player-speed )))))
 
 (defn keymap []
   {
