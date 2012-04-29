@@ -22,7 +22,7 @@
   (first (positions-of map-data \p)))
 
 (defn wall-box [x z]
-;;  (jme/position (jme/material (jme/box 0.5 0.5 1) "textures/grass/grass.png") x y 0))
+;;  (jme/position (jme/material (jme/box 0.5 0.5 1) "textures/grass/grass.png") x 0 z))
   (jme/position (jme/material (jme/box 0.5 1 0.5)) x 0 z))
 
 (defn labyrinth []
@@ -81,9 +81,9 @@
     :key-down move-down
   })
 
-(defn setup-camera [world])
-;  (jme/disable-flyby-cam world)
-;  (jme/position (jme/rotate (jme/camera-node world (player-node) (player-control)) 0 1.2 0) 0 0 2.5))
+(defn setup-camera [world]
+  (jme/disable-flyby-cam world)
+  (jme/position (jme/rotate (jme/camera-node world (player-node) (player-control)) jme/half-pi 0 0) 0 3 0))
 
 (defn setup [world physics-space]
   (let [labyrinth (labyrinth)
@@ -91,7 +91,7 @@
     (swap! player (fn [ignore pos] (create-player pos)) (player-start-pos map-data))
     (setup-camera world)
     (jme/add-control labyrinth landscape)
-;    (.add physics-space (player-control))
+    (.add physics-space (player-control))
     (.add physics-space landscape)
     (jme/node [labyrinth (player-node)])))
 
