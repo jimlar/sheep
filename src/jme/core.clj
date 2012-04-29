@@ -1,5 +1,5 @@
 (ns jme.core
-  (:import [com.jme3.math Vector3f Quaternion])
+  (:import [com.jme3.math Vector3f Quaternion FastMath])
   (:import [com.jme3.scene Geometry Node CameraNode])
   (:import [com.jme3.scene.shape Box Sphere Quad])
   (:import com.jme3.scene.control.CameraControl)
@@ -49,6 +49,10 @@
   ([obj] (let [v (.getLocalTranslation obj)] {:x (.x v) :y (.y v) :z (.z v)}))
   ([obj x y] (position obj x y 0))
   ([obj x y z] (doto obj (.setLocalTranslation (Vector3f. x y z)))))
+
+(def pi FastMath/PI)
+(def half-pi FastMath/HALF_PI)
+(def quarter-pi FastMath/QUARTER_PI)
 
 (defn rotate
   ([obj x y z w] (doto obj (.rotate (Quaternion. x y z w))))
