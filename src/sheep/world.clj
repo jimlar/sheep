@@ -58,20 +58,17 @@
   (let [pos (player-pos)]
     (phys/location (player-control ) (- (:x pos) (* value player-speed)) (:y pos) (:z pos))))
 
-;(.setWalkDirection (player-control) (.multLocal (.clone (.getLeft (.getCamera world))) (float 0.4))))
-
-
 (defn move-right [world value]
   (let [pos (player-pos)]
     (phys/location (player-control ) (+ (:x pos) (* value player-speed)) (:y pos) (:z pos))))
 
 (defn move-up [world value]
   (let [pos (player-pos)]
-    (phys/location (player-control ) (:x pos) (:y pos) (+ (:z pos) (* value player-speed )))))
+    (phys/location (player-control ) (:x pos) (:y pos) (- (:z pos) (* value player-speed )))))
 
 (defn move-down [world value]
   (let [pos (player-pos)]
-    (phys/location (player-control ) (:x pos) (:y pos) (- (:z pos) (* value player-speed )))))
+    (phys/location (player-control ) (:x pos) (:y pos) (+ (:z pos) (* value player-speed )))))
 
 (defn keymap []
   {
@@ -83,7 +80,7 @@
 
 (defn setup-camera [world]
   (jme/disable-flyby-cam world)
-  (jme/position (jme/rotate (jme/camera-node world (player-node) (player-control)) jme/half-pi 0 0) 0 3 0))
+  (jme/position (jme/rotate (jme/camera-node world (player-node) (player-control)) jme/half-pi jme/half-pi 0) 0 3 0))
 
 (defn setup [world physics-space]
   (let [labyrinth (labyrinth)

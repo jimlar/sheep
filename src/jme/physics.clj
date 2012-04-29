@@ -14,7 +14,7 @@
   ([shape mass] (RigidBodyControl. shape mass)))
 
 (defn character-control [character-spatial step-height jump-speed fall-speed gravity]
-  (let [control (CharacterControl. (CapsuleCollisionShape. 0.25 1 1) step-height)]
+  (let [control (CharacterControl. (CapsuleCollisionShape. 0.3 1 1) step-height)]
     (.addControl character-spatial control)
     (doto control
       (.setJumpSpeed jump-speed)
