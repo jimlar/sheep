@@ -128,6 +128,7 @@
               (simpleInitApp []
                 (eat-exceptions
                   (.attach (.getStateManager this) bullet)
+                  (.enableDebug (.getPhysicsSpace bullet) asset-manager)
                   (attach (.getRootNode this) (setup-fn this (.getPhysicsSpace bullet)))
                   (init-keymappings this key-map)
                   (.setMoveSpeed (.getFlyByCamera this) (float 7))
